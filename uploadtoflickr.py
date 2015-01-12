@@ -1,7 +1,9 @@
 #!/usr/bin/env python
+import datetime
 
 import os
 import getopt
+import re
 import sys
 # flickrapi does not work with python 3
 import flickrapi
@@ -62,6 +64,24 @@ def upload(filename):
     rsp = flickr.upload(params)
     #print(rsp)
 
+def get_title(filename):
+    print("matching "+filename)
+    d = re.match(r"isaacsharbour-(\d\d\d\d)-(\d\d)-(\d\d)-(\d\d)(\d\d).jpg", filename)
+    if not(d):
+        print("Failed: " + d.string)
+        sys.exit(1)
+    year = int(d.group(1))
+    month = int(d.group(2).lstrip("0"))
+    day = int(d.group(3).lstrip("0"))
+    hour = int(d.group(4).lstrip("0"))
+    minute = int(d.group(5).lstrip("0"))
+    photodate = datetime.datetime(year, month, day, hour, minute)
+    print(photodate)
+    dayformat = '{d:%B} {d.day} {d.year}'.format(d=photodate)
+    timeformat = '{d:%I}:{d.minute:02} {d:%p}'.format(d=photodate).lstrip("0")
+    return "Isaac's Harbour, " + dayformat + ", " + timeformat
+
+
 def main(argv):
     print('ARGV      :', sys.argv[1:])
     verbose=False
@@ -90,16 +110,17 @@ def main(argv):
     for file in files:
             try:
                 print("UPLOADING ", file)
-                flickr.upload(
-                    filename=file.encode('utf-8'),
-                    title= u'TEST',
-                    is_public=1
-                    #os.path.splitext(os.path.basename(file_['path']))[0],
-                    #is_public=self.photo_settings.get('is_public', 0),
-                    #is_friend=self.photo_settings.get('is_friend', 0),
-                    #is_family=self.photo_settings.get('is_family', 0),
-                    #tags=self.path_to_tags(file_['path'].replace(self.path, ''))
-                )
+                print(get_title(file))
+                #flickr.upload(
+                #    filename=file.encode('utf-8'),
+                #    title= u'TEST',
+                #    is_public=1
+                #    #os.path.splitext(os.path.basename(file_['path']))[0],
+                #    #is_public=self.photo_settings.get('is_public', 0),
+                #    #is_friend=self.photo_settings.get('is_friend', 0),
+                #    #is_family=self.photo_settings.get('is_family', 0),
+                #    #tags=self.path_to_tags(file_['path'].replace(self.path, ''))
+                #)
                 print("DONE")
                 #print '{} uploaded'.format(file_['path'])
             except:

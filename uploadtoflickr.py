@@ -105,15 +105,14 @@ def main(argv):
     #print 'OUTPUT    :', output_filename
     print('REMAINING :', remainder)
     files=remainder
-    #for file in files:
-    #    upload(str(file))
+
     for file in files:
             try:
                 print("UPLOADING ", file)
                 print(get_title(file))
                 #flickr.upload(
                 #    filename=file.encode('utf-8'),
-                #    title= u'TEST',
+                #    title= get_title(file),
                 #    is_public=1
                 #    #os.path.splitext(os.path.basename(file_['path']))[0],
                 #    #is_public=self.photo_settings.get('is_public', 0),

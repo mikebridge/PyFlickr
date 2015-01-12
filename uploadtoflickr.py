@@ -19,23 +19,25 @@ flickr = flickrapi.FlickrAPI(api_key, api_secret)
 print('authenticating...')
 
 # Only do this if we don't have a valid token already
-if not flickr.token_valid(perms='delete'):
+if not flickr.token_valid(perms=u'delete'):
 
     # Get a request token
     flickr.get_request_token(oauth_callback='oob')
 
     # Open a browser at the authentication URL. Do this however
     # you want, as long as the user visits that URL.
-    authorize_url = flickr.auth_url(perms='delete')
+    authorize_url = flickr.auth_url(perms=u'delete')
     webbrowser.open_new_tab(authorize_url)
 
     # Get the verifier code from the user. Do this however you
     # want, as long as the user gives the application the code.
     #verifier = unicode(raw_input('Verifier code: '))
     print(authorize_url);
-    verifier = input("Enter the authorization code: ");
+    verifier = raw_input("Enter the authorization code: ");
+    uverifier = unicode(verifier, "utf-8")
+    print("verifier is "+uverifier)
     # Trade the request token for an access token
-    flickr.get_access_token(verifier)
+    flickr.get_access_token(uverifier)
 
 print('uploading...')
 
@@ -79,7 +81,7 @@ def get_title(filename):
     print(photodate)
     dayformat = '{d:%B} {d.day} {d.year}'.format(d=photodate)
     timeformat = '{d:%I}:{d.minute:02} {d:%p}'.format(d=photodate).lstrip("0")
-    return "Isaac's Harbour, " + dayformat + ", " + timeformat
+    return unicode("Isaac's Harbour, " + dayformat + ", " + timeformat, "utf-8")
 
 
 def main(argv):
